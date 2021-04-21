@@ -76,12 +76,5 @@ namespace WebCrawler
                 await productPageFinder.CrawlProductPageAsync();
             }
         }
-
-        private string GetProductDetailUrl(string productId)
-        {
-            return $"{ConnectToConfig.ScopeLink}/p/{productId}{ConnectToConfig.ProductPagePostfix}";
-        }
-
-
     }
 }

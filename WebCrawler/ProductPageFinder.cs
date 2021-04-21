@@ -54,11 +54,7 @@ namespace WebCrawler
 
                 Console.WriteLine($"Found Recipe Name: {recipeData.Name}");
                 Console.WriteLine($"Found Recipe URL: {recipeData.RecipeUrl}");
-                //Console.WriteLine($"Found Product Allergies: {string.Join(",", foundAllergyString)}");
                 Console.WriteLine(Environment.NewLine);
-
-                // INDICATOR Console.WriteLine("ONLY ALLERGY: " + onlyAllergySection);
-                // Console.WriteLine("Allergy Information: " + foundAllergyString);
 
                 await ConnectToDB.InsertProductToDbAsync(recipeData);
             }
@@ -73,20 +69,14 @@ namespace WebCrawler
 
         private RecipeData GetRecipeData()
         {
-            //var formatValueRegexString = FormatValueRegexString("id=\"recipe - schema\"", 20, 5, IndexRegexType.NoIndex);
-
-            Regex regexPattern = new Regex("id=\"recipe-schema\">.*?</script>", RegexOptions.Singleline);
+            Regex regexPattern = new Regex(ConnectToConfig.RecipeJsonObjectRegex, RegexOptions.Singleline);
             Match regexMatch = regexPattern.Match(_htmlDocument.Html.ToLower());
 
             if (regexMatch.Success)
             {
                 var foundValue = regexMatch.Value;
-                //startPosition += foundValue.IndexOf(indexSign);
-                //var length = endPosition - startPosition;
-
-                var endPosition = foundValue.Length - 9;
-
-                var recipeDataRawObjectString = foundValue.Substring(20, endPosition - 20).Trim();
+                var endPosition = foundValue.Length - ConnectToConfig.EndIndexRegex;
+                var recipeDataRawObjectString = foundValue.Substring(ConnectToConfig.StartIndexRegex, endPosition - ConnectToConfig.StartIndexRegex).Trim();
 
                 var recipeDataObject = JsonConvert.DeserializeObject<RecipeData>(recipeDataRawObjectString);
 

@@ -8,16 +8,15 @@ namespace WebCrawler
         private const string USER_AGENT_BROWSER = "USER_AGENT_BROWSER";
         private const string FIRST_LINK_TO_CRAWL = "FIRST_LINK_TO_CRAWL";
         private const string SCOPE_LINK = "SCOPE_LINK";
-        private const string PRODUCT_PAGE_POSTFIX = "PRODUCT_PAGE_POSTFIX";
-        private const string PRODUCT_LINK_ATTRIBUTE = "PRODUCT_LINK_ATTRIBUTE";
 
-        
-        private const string PRODUCT_BARCODE_REGEX = "PRODUCT_BARCODE_REGEX";
-        private const string PRODUCT_NAME_REGEX = "PRODUCT_NAME_REGEX";
-        private const string PRODUCT_INGREDIENTS_REGEX = "PRODUCT_INGREDIENTS_REGEX";
-        private const string PRODUCT_ALLERGY_REGEX = "PRODUCT_ALLERGY_REGEX";
 
-        private const string PRODUCT_DB_CONNECTION_STRING = "ProductDbConnectionString";
+        private const string RECIPE_JSON_OBJECT_REGEX = "RECIPE_JSON_OBJECT_REGEX";
+        private const string START_INDEX_REGEX = "START_INDEX_REGEX";
+        private const string END_INDEX_REGEX = "END_INDEX_REGEX";
+
+
+        private const string RECIPES_DB_SQL_QUERY_PREFIX = "RECIPES_DB_SQL_QUERY_PREFIX";
+        private const string RECIPES_DB_CONNECTION_STRING = "RecipesDbConnectionString";
 
         public static int MaxPagesToSearch
         {
@@ -55,51 +54,43 @@ namespace WebCrawler
             }
         }
 
-        public static string ProductPagePostfix
+        public static string RecipeJsonObjectRegex
         {
             get
             {
-                return ConfigurationManager.AppSettings[PRODUCT_PAGE_POSTFIX];
+                return ConfigurationManager.AppSettings[RECIPE_JSON_OBJECT_REGEX];
             }
         }
 
-        public static string ProductLinkAttribute
+        public static int StartIndexRegex
         {
             get
             {
-                return ConfigurationManager.AppSettings[PRODUCT_LINK_ATTRIBUTE];
+                if (!int.TryParse(ConfigurationManager.AppSettings[START_INDEX_REGEX], out int startIndexRegex))
+                {
+                    return 0;
+                };
+                return startIndexRegex;
             }
         }
 
-        public static string BarcodeRegexName
+        public static int EndIndexRegex
         {
             get
             {
-                return ConfigurationManager.AppSettings[PRODUCT_BARCODE_REGEX];
+                if (!int.TryParse(ConfigurationManager.AppSettings[END_INDEX_REGEX], out int endIndexRegex))
+                {
+                    return 0;
+                };
+                return endIndexRegex;
             }
         }
 
-        public static string ProductNameRegex
+        public static string RecipesDbSqlQueryPrefix
         {
             get
             {
-                return ConfigurationManager.AppSettings[PRODUCT_NAME_REGEX];
-            }
-        }
-
-        public static string ProductIngredientsRegex
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings[PRODUCT_INGREDIENTS_REGEX];
-            }
-        }
-
-        public static string ProductAllergyRegex
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings[PRODUCT_ALLERGY_REGEX];
+                return ConfigurationManager.AppSettings[RECIPES_DB_SQL_QUERY_PREFIX];
             }
         }
 
@@ -107,7 +98,7 @@ namespace WebCrawler
         {
             get
             {
-                return ConfigurationManager.ConnectionStrings[PRODUCT_DB_CONNECTION_STRING].ConnectionString;
+                return ConfigurationManager.ConnectionStrings[RECIPES_DB_CONNECTION_STRING].ConnectionString;
             }
         }
     }

@@ -11,8 +11,7 @@ namespace WebCrawler
 
         private static string GetFormattedProductInsertQuery(RecipeData recipeData)
         {
-            return $"insert into recipe_db.recipes (nameRecipes, categoryRecipes, ingredientsRecipes, urlRecipes) values" +
-                $" ('{recipeData.Name}', '{recipeData.RecipeCategory}', '{string.Join(",", recipeData.RecipeIngredient)}', '{recipeData.RecipeUrl}')";
+            return $"{ ConnectToConfig.RecipesDbSqlQueryPrefix} ('{recipeData.Name}', '{recipeData.RecipeCategory}', '{string.Join(",", recipeData.RecipeIngredient)}', '{recipeData.RecipeUrl}')";
         }
 
         //Insert product to DB asynchronysly
@@ -26,7 +25,6 @@ namespace WebCrawler
                     {
                         await mySqlConnection.OpenAsync();
                         await sqlCommand.ExecuteNonQueryAsync();
-
                         return true;
                     }
                     catch (Exception e)

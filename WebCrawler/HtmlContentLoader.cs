@@ -17,9 +17,11 @@ namespace WebCrawler
                 {
                     HttpResponseMessage response = await httpClient.GetAsync(url);
 
-                    if (response.IsSuccessStatusCode && response.Content.Headers.ContentType.ToString().Contains("text/html")) // status code == 200 && content type of response contains text/html
+                    if (response.IsSuccessStatusCode && response.Content.Headers.ContentType.ToString().Contains("text/html") &&
+                        response.Content.Headers.ContentType.CharSet.Contains("UTF-8")) // status code == 200 && content type of response contains text/html
                     {
                         string htmlContent = await httpClient.GetStringAsync(url);
+
                         return (true, htmlContent);
                     }
                     return (false, null);
