@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\web-crawler-csharp\\WebCrawler\\WebCrawler.csproj": {}
+    "C:\\Users\\Home\\Desktop\\web-crawler-csharp\\WebCrawler\\WebCrawler.csproj": {}
   },
   "projects": {
-    "C:\\web-crawler-csharp\\WebCrawler\\WebCrawler.csproj": {
+    "C:\\Users\\Home\\Desktop\\web-crawler-csharp\\WebCrawler\\WebCrawler.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\web-crawler-csharp\\WebCrawler\\WebCrawler.csproj",
+        "projectUniqueName": "C:\\Users\\Home\\Desktop\\web-crawler-csharp\\WebCrawler\\WebCrawler.csproj",
         "projectName": "WebCrawler",
-        "projectPath": "C:\\web-crawler-csharp\\WebCrawler\\WebCrawler.csproj",
-        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\web-crawler-csharp\\WebCrawler\\obj\\",
+        "projectPath": "C:\\Users\\Home\\Desktop\\web-crawler-csharp\\WebCrawler\\WebCrawler.csproj",
+        "packagesPath": "C:\\Users\\Home\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Home\\Desktop\\web-crawler-csharp\\WebCrawler\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Home\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -80,7 +80,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
         }
       }
     }
