@@ -15,7 +15,10 @@ namespace WebCrawler
         private const string END_INDEX_REGEX = "END_INDEX_REGEX";
 
 
-        private const string RECIPES_DB_SQL_QUERY_PREFIX = "RECIPES_DB_SQL_QUERY_PREFIX";
+        private const string RECIPES_DB_INSERT_SQL_QUERY_PREFIX = "RECIPES_DB_INSERT_SQL_QUERY_PREFIX";
+        private const string RECIPES_DB_UPDATE_SQL_QUERY_PREFIX = "RECIPES_DB_UPDATE_SQL_QUERY_PREFIX";
+        private const string RECIPES_DB_COUNT_SQL_QUERY_PREFIX = "RECIPES_DB_COUNT_SQL_QUERY_PREFIX";
+        
         private const string RECIPES_DB_CONNECTION_STRING = "RecipesDbConnectionString";
 
         public static int MaxPagesToSearch
@@ -86,13 +89,30 @@ namespace WebCrawler
             }
         }
 
-        public static string RecipesDbSqlQueryPrefix
+        public static string RecipesDbInsertSqlQueryPrefix
         {
             get
             {
-                return ConfigurationManager.AppSettings[RECIPES_DB_SQL_QUERY_PREFIX];
+                return ConfigurationManager.AppSettings[RECIPES_DB_INSERT_SQL_QUERY_PREFIX];
             }
         }
+
+        public static string RecipesDbUpdateSqlQueryPrefix
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings[RECIPES_DB_UPDATE_SQL_QUERY_PREFIX];
+            }
+        }
+
+        public static string RecipesDbCountSqlQueryPrefix
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings[RECIPES_DB_COUNT_SQL_QUERY_PREFIX];
+            }
+        }
+        
 
         public static string ProductDbConnectionString
         {

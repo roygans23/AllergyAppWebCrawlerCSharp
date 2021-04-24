@@ -56,7 +56,14 @@ namespace WebCrawler
                 Console.WriteLine($"Found Recipe URL: {recipeData.RecipeUrl}");
                 Console.WriteLine(Environment.NewLine);
 
-                await ConnectToDB.InsertProductToDbAsync(recipeData);
+                if (await ConnectToDB.DoesRecipeAlreadyExistAsync(recipeData.Name))
+                {
+                    await ConnectToDB.UpdateProductToDbAsync(recipeData);
+                }
+                else
+                {
+                    await ConnectToDB.InsertProductToDbAsync(recipeData);
+                }
             }
             catch (Exception exception)
             {

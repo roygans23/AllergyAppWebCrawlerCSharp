@@ -14,8 +14,12 @@ namespace WebCrawler
         {
             Console.WriteLine("Executing spider of product web crawler");
             Spider spider = new Spider();
-
-            await spider.Search(ConnectToConfig.FirstLinkToCrawl, ConnectToConfig.ScopeLink);
+            
+            //Check for updations when reached max links visited
+            while(true)
+            {
+                await spider.Search(ConnectToConfig.FirstLinkToCrawl, ConnectToConfig.ScopeLink);
+            }
         }
     }
 }
