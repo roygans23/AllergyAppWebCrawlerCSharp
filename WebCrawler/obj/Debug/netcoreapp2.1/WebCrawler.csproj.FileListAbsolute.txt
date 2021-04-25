@@ -35,4 +35,3 @@ C:\Users\Home\Desktop\web-crawler-csharp\WebCrawler\obj\Debug\netcoreapp2.1\WebC
 C:\Users\Home\Desktop\web-crawler-csharp\WebCrawler\obj\Debug\netcoreapp2.1\WebCrawler.dll
 C:\Users\Home\Desktop\web-crawler-csharp\WebCrawler\obj\Debug\netcoreapp2.1\WebCrawler.pdb
 C:\Users\Home\Desktop\web-crawler-csharp\WebCrawler\obj\Debug\netcoreapp2.1\WebCrawler.genruntimeconfig.cache
-C:\Users\Home\Desktop\web-crawler-csharp\WebCrawler\obj\Debug\netcoreapp2.1\WebCrawler.csprojAssemblyReference.cache

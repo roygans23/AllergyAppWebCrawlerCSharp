@@ -72,7 +72,7 @@ namespace WebCrawler
         {
             foreach (string productDetailUrl in _productPageUrls)
             {
-                var productPageFinder = new ProductPageFinder(productDetailUrl);
+                var productPageFinder = new RecipePageFinder(productDetailUrl);
                 await productPageFinder.CrawlProductPageAsync();
             }
         }

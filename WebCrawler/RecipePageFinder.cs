@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace WebCrawler
 {
-    public class ProductPageFinder
+    public class RecipePageFinder
     {
         private Document _htmlDocument;
         private string _productPageUrl;
 
-        public ProductPageFinder(string productDetailUrl)
+        public RecipePageFinder(string productDetailUrl)
         {
             _productPageUrl = productDetailUrl;
         }
@@ -48,8 +48,12 @@ namespace WebCrawler
             try
             {
                 var recipeData = GetRecipeData();
+                var recipeCategory = GetRecipeAscendantCategory();
 
                 if (recipeData == null) return false;
+
+                if (recipeCategory != null) recipeData.RecipeCategory = recipeCategory;
+
                 recipeData.RecipeUrl = _productPageUrl;
 
                 Console.WriteLine($"Found Recipe Name: {recipeData.Name}");
@@ -89,6 +93,27 @@ namespace WebCrawler
 
 
                 return recipeDataObject;
+            }
+
+            return null;
+
+        }
+
+        private string GetRecipeAscendantCategory()
+        {
+            Regex regexPattern = new Regex("<ol class=\"breadcrumb\">.*?קטגוריות.*?<li>.*?</li>", RegexOptions.Singleline);
+            Match regexMatch = regexPattern.Match(_htmlDocument.Html.ToLower());
+
+            if (regexMatch.Success)
+            {
+                var foundValue = regexMatch.Value;
+                var startPositionPrefix = foundValue.LastIndexOf("/\">");
+                var startPosition = startPositionPrefix + 3;
+                var endPosition = foundValue.LastIndexOf("</a>");
+
+                var recipeAscendantCategory = foundValue.Substring(startPosition, endPosition - startPosition).Trim();
+
+                return recipeAscendantCategory;
             }
 
             return null;

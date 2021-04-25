@@ -47,7 +47,7 @@ namespace WebCrawler
         public string RecipeYield { get; private set; }
 
         [JsonProperty("recipeCategory")]
-        public string RecipeCategory { get; private set; }
+        public string RecipeCategory { get; set; }
 
         [JsonProperty("recipeIngredient")]
         public string[] RecipeIngredient { get; private set; }
