@@ -3,9 +3,9 @@ using Supremes;
 using Supremes.Nodes;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WebCrawler.Enums;
 
 namespace WebCrawler
 {
@@ -19,22 +19,23 @@ namespace WebCrawler
             _productPageUrl = productDetailUrl;
         }
 
-        public async Task CrawlProductPageAsync()
+        public async Task<List<string>> CrawlProductPageAsync(bool crawlMainCategoriesOnly = false)
         {
-            var response = await HtmlContentLoader.TryGetHtmlContentAsync(_productPageUrl);
-            if (!response.IsLoaded) return;
-            _htmlDocument = Dcsoup.Parse(response.HtmlContent);
-            await TryInsertRecipeToDB(_htmlDocument.Html);
+            var (IsLoaded, HtmlContent) = await HtmlContentLoader.TryGetHtmlContentAsync(_productPageUrl);
+            if (!IsLoaded) return null;
+            _htmlDocument = Dcsoup.Parse(HtmlContent);
+
+            if (crawlMainCategoriesOnly)
+            {
+                return GetAllAscendantRecipesCategory();
+            }
+            else
+            {
+                await TryInsertRecipeToDB(_htmlDocument.Html);
+                return null;
+            }
 
         }
-
-        /**
-         * Performs a search on the body of on the HTML document that is retrieved. This
-         * method should only be called after a successful crawl.
-         * 
-         * @param searchWord - The word or string to look for
-         * @return whether or not the word was found
-         */
 
         public async Task<bool> TryInsertRecipeToDB(string htmlContent)
         {
@@ -48,33 +49,35 @@ namespace WebCrawler
             try
             {
                 var recipeData = GetRecipeData();
-                var recipeCategory = GetRecipeAscendantCategory();
-
                 if (recipeData == null) return false;
 
+                var recipeCategory = GetRecipeAscendantCategory();
                 if (recipeCategory != null) recipeData.RecipeCategory = recipeCategory;
 
                 recipeData.RecipeUrl = _productPageUrl;
+                recipeData.DecodeUnicodeChars();
 
-                Console.WriteLine($"Found Recipe Name: {recipeData.Name}");
-                Console.WriteLine($"Found Recipe URL: {recipeData.RecipeUrl}");
-                Console.WriteLine(Environment.NewLine);
+                Console.WriteLine($"Found Recipe Name: {recipeData.Name}, Found Recipe URL: {recipeData.RecipeUrl}");
 
-                if (await ConnectToDB.DoesRecipeAlreadyExistAsync(recipeData.Name))
+
+                //DB commands
+                if (await ConnectToDB.ExecuteCountRecipeRowsQueryCommandAsync(recipeData, SqlCommandType.Select))
                 {
-                    await ConnectToDB.UpdateProductToDbAsync(recipeData);
+                    await ConnectToDB.ExecuteNonQueryRecipeCommandAsync(recipeData, SqlCommandType.Update);
+                    Console.WriteLine("Updated existing recipe in DB");
                 }
                 else
                 {
-                    await ConnectToDB.InsertProductToDbAsync(recipeData);
+                    await ConnectToDB.ExecuteNonQueryRecipeCommandAsync(recipeData, SqlCommandType.Insert);
+                    Console.WriteLine("Inserted new recipe in DB");
                 }
+                Console.WriteLine(Environment.NewLine);
             }
             catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
                 return false;
             }
-
             return true;
         }
 
@@ -91,10 +94,10 @@ namespace WebCrawler
 
                 var recipeDataObject = JsonConvert.DeserializeObject<RecipeData>(recipeDataRawObjectString);
 
-
                 return recipeDataObject;
             }
 
+            Console.WriteLine($"Not found data for recipe in url {_productPageUrl}!");
             return null;
 
         }
@@ -115,9 +118,35 @@ namespace WebCrawler
 
                 return recipeAscendantCategory;
             }
-
             return null;
+        }
 
+        private List<string> GetAllAscendantRecipesCategory()
+        {
+            Regex regexPattern = new Regex("quadmenu-item-level-0.*?quadmenu-item-level-0", RegexOptions.Singleline);
+
+            Match regexMatch = regexPattern.Match(_htmlDocument.Html.ToLower());
+            var list = new List<string>();
+            if (regexMatch.Success)
+            {
+                var foundValue = regexMatch.Value;
+
+                Regex mainCategoriesRegex = new Regex("<li.*?quadmenu-item-level-1.*?</li>", RegexOptions.Singleline);
+                var mainCategoriesRegexMatchs = mainCategoriesRegex.Matches(foundValue);
+
+                foreach (Match categoryRegexMatch in mainCategoriesRegexMatchs)
+                {
+                    var foundCategoryMatch = categoryRegexMatch.Value;
+                    var startPositionPrefix = foundCategoryMatch.IndexOf("hover t_1000\">");
+                    var startPosition = startPositionPrefix + 14;
+                    var endPosition = foundCategoryMatch.IndexOf("</span> </span>");
+
+                    var recipeAscendantCategory = foundCategoryMatch.Substring(startPosition, endPosition - startPosition).Trim();
+
+                    list.Add(recipeAscendantCategory);
+                }
+            }
+            return list;
         }
 
     }

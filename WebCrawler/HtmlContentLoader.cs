@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WebCrawler
@@ -24,6 +22,7 @@ namespace WebCrawler
 
                         return (true, htmlContent);
                     }
+                    Console.WriteLine($"{url} is not in correct format - text/html & UTF-8");
                     return (false, null);
                 }
             }

@@ -1,7 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace WebCrawler
 {
@@ -50,12 +47,22 @@ namespace WebCrawler
         public string RecipeCategory { get; set; }
 
         [JsonProperty("recipeIngredient")]
-        public string[] RecipeIngredient { get; private set; }
+        public string[] RecipeIngredients { get; private set; }
 
         [JsonProperty("recipeInstructions")]
         public string RecipeInstructions { get; private set; }
 
         public string RecipeUrl { get; set; }
 
+        public void DecodeUnicodeChars()
+        {
+            Name = System.Net.WebUtility.HtmlDecode(Name);
+            RecipeCategory = System.Net.WebUtility.HtmlDecode(RecipeCategory);
+
+            for (var index = 0; index < RecipeIngredients.Length; index++)
+            {
+                RecipeIngredients[index] = System.Net.WebUtility.HtmlDecode(RecipeIngredients[index]);
+            }
+        }
     }
 }

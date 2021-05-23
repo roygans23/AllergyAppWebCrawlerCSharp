@@ -35,7 +35,7 @@ namespace WebCrawler
             try
             {
                 var response = await HtmlContentLoader.TryGetHtmlContentAsync(url);
-                if (!response.Item1) return false;
+                if (!response.IsLoaded) return false;
 
                 var htmlDocument = Dcsoup.Parse(response.Item2);
 

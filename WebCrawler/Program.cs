@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using WebCrawler.Enums;
 
 namespace WebCrawler
 {
@@ -18,6 +19,10 @@ namespace WebCrawler
             //Check for updations when reached max links visited
             while(true)
             {
+                var productPageFinder = new RecipePageFinder(ConnectToConfig.FirstLinkToCrawl);
+                var mainCategoriesList = await productPageFinder.CrawlProductPageAsync(true);
+
+                //Start web crawler
                 await spider.Search(ConnectToConfig.FirstLinkToCrawl, ConnectToConfig.ScopeLink);
             }
         }
