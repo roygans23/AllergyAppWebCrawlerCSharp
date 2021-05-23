@@ -5,15 +5,18 @@ namespace WebCrawler
     public static class ConnectToConfig
     {
         private const string MAX_PAGES_TO_SEARCH = "MAX_PAGES_TO_SEARCH";
-        private const string USER_AGENT_BROWSER = "USER_AGENT_BROWSER";
         private const string FIRST_LINK_TO_CRAWL = "FIRST_LINK_TO_CRAWL";
         private const string SCOPE_LINK = "SCOPE_LINK";
 
 
         private const string RECIPE_JSON_OBJECT_REGEX = "RECIPE_JSON_OBJECT_REGEX";
-        private const string START_INDEX_REGEX = "START_INDEX_REGEX";
-        private const string END_INDEX_REGEX = "END_INDEX_REGEX";
+        private const string START_INDEX_JSON_OBJECT_REGEX = "START_INDEX_JSON_OBJECT_REGEX";
+        private const string END_INDEX_JSON_OBJECT_REGEX = "END_INDEX_JSON_OBJECT_REGEX";
 
+        private const string RECIPE_MAIN_CATEGORY_REGEX = "RECIPE_MAIN_CATEGORY_REGEX";
+        private const string START_INDEX_MAIN_CATEGORY_REGEX = "START_INDEX_MAIN_CATEGORY_REGEX";
+        private const string START_POSITION_PREFIX_MAIN_CATEGORY_REGEX = "START_POSITION_PREFIX_MAIN_CATEGORY_REGEX";
+        private const string END_POSITION_SUFFIX_MAIN_CATEGORY_REGEX = "END_POSITION_SUFFIX_MAIN_CATEGORY_REGEX";
 
         private const string RECIPES_DB_INSERT_SQL_QUERY_PREFIX = "RECIPES_DB_INSERT_SQL_QUERY_PREFIX";
         private const string RECIPES_DB_UPDATE_SQL_QUERY_PREFIX = "RECIPES_DB_UPDATE_SQL_QUERY_PREFIX";
@@ -30,14 +33,6 @@ namespace WebCrawler
                     return 0;
                 };
                 return maxPagesToSearch;
-            }
-        }
-
-        public static string UserAgentBrowser
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings[USER_AGENT_BROWSER];
             }
         }
 
@@ -65,11 +60,11 @@ namespace WebCrawler
             }
         }
 
-        public static int StartIndexRegex
+        public static int StartIndexJsonObjectRegex
         {
             get
             {
-                if (!int.TryParse(ConfigurationManager.AppSettings[START_INDEX_REGEX], out int startIndexRegex))
+                if (!int.TryParse(ConfigurationManager.AppSettings[START_INDEX_JSON_OBJECT_REGEX], out int startIndexRegex))
                 {
                     return 0;
                 };
@@ -77,15 +72,51 @@ namespace WebCrawler
             }
         }
 
-        public static int EndIndexRegex
+        public static int EndIndexJsonObjectRegex
         {
             get
             {
-                if (!int.TryParse(ConfigurationManager.AppSettings[END_INDEX_REGEX], out int endIndexRegex))
+                if (!int.TryParse(ConfigurationManager.AppSettings[END_INDEX_JSON_OBJECT_REGEX], out int endIndexRegex))
                 {
                     return 0;
                 };
                 return endIndexRegex;
+            }
+        }
+
+        public static string RecipeMainCategoryRegex
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings[RECIPE_MAIN_CATEGORY_REGEX];
+            }
+        }
+
+        public static int StartIndexMainCategoryRegex
+        {
+            get
+            {
+                if (!int.TryParse(ConfigurationManager.AppSettings[START_INDEX_MAIN_CATEGORY_REGEX], out int startIndexRegex))
+                {
+                    return 0;
+                };
+                return startIndexRegex;
+            }
+        }
+
+        public static string StartPositionPrefixMainCategoryRegex
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings[START_POSITION_PREFIX_MAIN_CATEGORY_REGEX];
+            }
+        }
+
+        public static string EndPositionSuffixMainCategoryRegex
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings[END_POSITION_SUFFIX_MAIN_CATEGORY_REGEX];
             }
         }
 
