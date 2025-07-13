@@ -5,9 +5,9 @@ namespace WebCrawler
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            MainAsync().GetAwaiter().GetResult();
+            await MainAsync();
         }
 
         private static async Task MainAsync()
