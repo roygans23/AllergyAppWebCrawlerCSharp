@@ -35,7 +35,7 @@ namespace WebCrawler
             try
             {
                 var response = await HtmlContentLoader.TryGetHtmlContentAsync(url);
-                if (!response.Item1) return false;
+                if (!response.IsLoaded) return false;
 
                 var htmlDocument = Dcsoup.Parse(response.Item2);
 
@@ -43,18 +43,17 @@ namespace WebCrawler
                 // INDICATOR Console.WriteLine("Found (" + linksOnPage.size() + ") links");
                 foreach (Element link in linksOnPage)
                 {
-                    string dataProductCodeAttribute = link.Attr(ConnectToConfig.ProductLinkAttribute);
+    
                     string absUrl = link.AbsUrl("href");
 
-                    if (dataProductCodeAttribute.Any())
+                    // checks if is page of recipe
+                    if (absUrl.Contains("https://foody.co.il/foody_recipe"))
                     {
-                        string productDetailsUrl = GetProductDetailUrl(dataProductCodeAttribute);
-                        if (!_productPageUrls.Contains(productDetailsUrl))
-                        {
-                            _productPageUrls.Add(productDetailsUrl);
-                        }
+                        _productPageUrls.Add(absUrl);
                     }
 
+
+                    //checks if is page in scope
                     if (absUrl.Any() && (absUrl != "") && absUrl.StartsWith(scope))
                     {
                         PageLinks.Add(absUrl);
@@ -73,16 +72,9 @@ namespace WebCrawler
         {
             foreach (string productDetailUrl in _productPageUrls)
             {
-                var productPageFinder = new ProductPageFinder(productDetailUrl);
+                var productPageFinder = new RecipePageFinder(productDetailUrl);
                 await productPageFinder.CrawlProductPageAsync();
             }
         }
-
-        private string GetProductDetailUrl(string productId)
-        {
-            return $"{ConnectToConfig.ScopeLink}/p/{productId}{ConnectToConfig.ProductPagePostfix}";
-        }
-
-      
     }
 }

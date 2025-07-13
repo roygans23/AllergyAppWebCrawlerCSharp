@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using WebCrawler.Enums;
 
 namespace WebCrawler
 {
@@ -12,10 +13,15 @@ namespace WebCrawler
 
         private static async Task MainAsync()
         {
-            Console.WriteLine("Executing spider of product web crawler");
+            Console.WriteLine("Executing spider of recipe web crawler");
             Spider spider = new Spider();
-
-            await spider.Search(ConnectToConfig.FirstLinkToCrawl, ConnectToConfig.ScopeLink);
+            
+            //Check for updations when reached max links visited
+            while(true)
+            {
+                //Start web crawler on first spider page to crawl/scrape
+                await spider.Search(ConnectToConfig.FirstLinkToCrawl, ConnectToConfig.ScopeLink);
+            }
         }
     }
 }

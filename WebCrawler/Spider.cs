@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WebCrawler
@@ -12,6 +10,11 @@ namespace WebCrawler
         private List<string> _pagesToVisit;
 
         public Spider()
+        {
+            ResetCrawlPages();
+        }
+
+        private void ResetCrawlPages()
         {
             _pagesVisited = new HashSet<string>();
             _pagesToVisit = new List<string>();
@@ -27,6 +30,7 @@ namespace WebCrawler
          */
         public async Task Search(string url, string scope)
         {
+            ResetCrawlPages();
             while (_pagesVisited.Count < ConnectToConfig.MaxPagesToSearch)
             {
                 string currentUrl;

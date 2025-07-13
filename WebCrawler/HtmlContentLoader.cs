@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WebCrawler
@@ -17,11 +15,14 @@ namespace WebCrawler
                 {
                     HttpResponseMessage response = await httpClient.GetAsync(url);
 
-                    if (response.IsSuccessStatusCode && response.Content.Headers.ContentType.ToString().Contains("text/html")) // status code == 200 && content type of response contains text/html
+                    if (response.IsSuccessStatusCode && response.Content.Headers.ContentType.ToString().Contains("text/html") &&
+                        response.Content.Headers.ContentType.CharSet.Contains("UTF-8")) // status code == 200 && content type of response contains text/html
                     {
                         string htmlContent = await httpClient.GetStringAsync(url);
+
                         return (true, htmlContent);
                     }
+                    Console.WriteLine($"{url} is not in correct format - text/html & UTF-8");
                     return (false, null);
                 }
             }

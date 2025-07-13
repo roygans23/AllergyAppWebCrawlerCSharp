@@ -1,39 +1,67 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Threading.Tasks;
+using WebCrawler.Enums;
 
 namespace WebCrawler
 {
     public static class ConnectToDB
     {
         //Format sql command for inserting product to DB
-        private static string GetFormattedProductInsertQuery(string id, string barcode, string name, string ingredients,
-            string allergy)
+        private static string GetSqlRecipeQueryByCommand(RecipeData recipeData, SqlCommandType sqlCommandType)
         {
-            return $"insert into Products (Id, Barcode, Name, Ingredients, Allergy values ({id}, {barcode}, {name}, {ingredients}, {allergy})";
+            switch(sqlCommandType)
+            {
+                case SqlCommandType.Update:
+                    return $"{ ConnectToConfig.RecipesDbUpdateSqlQueryPrefix} nameRecipes = '{recipeData.Name}', categoryRecipes = '{recipeData.RecipeCategory}', " +
+                $"ingredientsRecipes = '{string.Join(",", recipeData.RecipeIngredients)}', urlRecipes = '{recipeData.RecipeUrl}' WHERE nameRecipes = '{recipeData.Name}'";
+                case SqlCommandType.Insert:
+                    return $"{ ConnectToConfig.RecipesDbInsertSqlQueryPrefix} ('{recipeData.Name}', '{recipeData.RecipeCategory}', '{string.Join(",", recipeData.RecipeIngredients)}', '{recipeData.RecipeUrl}')";
+                default:
+                    return $"{ ConnectToConfig.RecipesDbCountSqlQueryPrefix} '{recipeData.Name}'";
+            }
         }
 
-        //Insert product to DB asynchronysly
-        public static async Task<bool> InsertProductToDbAsync(string id, string barcode, string name, string[] ingredients, string[] allergy)
+        public static async Task<bool> ExecuteCountRecipeRowsQueryCommandAsync(RecipeData recipeData, SqlCommandType sqlCommandType)
         {
-            using (SqlConnection sqlConnection = new SqlConnection(ConnectToConfig.ProductDbConnectionString))
+            using (MySqlConnection recipeSqlConnection = new MySqlConnection(ConnectToConfig.ProductDbConnectionString))
             {
-                using (SqlCommand sqlCommand = new SqlCommand(GetFormattedProductInsertQuery(id, barcode, name, string.Join(",", ingredients), string.Join(",", allergy)), sqlConnection))
+                using (MySqlCommand sqlCommand = new MySqlCommand(GetSqlRecipeQueryByCommand(recipeData, sqlCommandType), recipeSqlConnection))
                 {
                     try
                     {
-                        await sqlConnection.OpenAsync();
-                        await sqlCommand.ExecuteNonQueryAsync();
+                        await recipeSqlConnection.OpenAsync();
+                        var recipeRecordsCount = (int)(long)await sqlCommand.ExecuteScalarAsync();
 
+                        return recipeRecordsCount != 0;
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Cannot perform non query action for recipe with name {recipeData.Name}, received error {e.Message}");
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public static async Task<bool> ExecuteNonQueryRecipeCommandAsync(RecipeData recipeData, SqlCommandType sqlCommandType)
+        {
+            using (MySqlConnection recipeSqlConnection = new MySqlConnection(ConnectToConfig.ProductDbConnectionString))
+            {
+                using (MySqlCommand sqlCommand = new MySqlCommand(GetSqlRecipeQueryByCommand(recipeData, sqlCommandType), recipeSqlConnection))
+                {
+                    try
+                    {
+                        await recipeSqlConnection.OpenAsync();
+                        await sqlCommand.ExecuteNonQueryAsync();
                         return true;
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($"Cannot insert product with id {id}, received error {e.Message}");
+                        Console.WriteLine($"Cannot perform non query action for recipe with name {recipeData.Name}, received error {e.Message}");
                         return false;
                     }
-                   
                 }
             }
         }
